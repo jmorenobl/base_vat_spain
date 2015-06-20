@@ -56,5 +56,22 @@ class res_partner(osv.osv):
                 return False
         return True
 
+    def _construct_constraint_msg(self, cr, uid, ids, context=None):
+        def default_vat_check(cn, vn):
+            # by default, a VAT number is valid if:
+            #  it starts with 2 letters
+            #  has more than 3 characters
+            return cn[0] in string.ascii_lowercase and cn[1] in string.ascii_lowercase
+        vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
+        vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
+        error_partner = self.browse(cr, uid, ids, context=context)
+        if default_vat_check(vat_country, vat_number):
+            vat_no = _ref_vat[vat_country] if vat_country in _ref_vat else vat_no
+            if self.pool['res.users'].browse(cr, uid, uid).company_id.vat_check_vies:
+                return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (error_partner[0].vat, error_partner[0].name, vat_no)
+        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (error_partner[0].vat, error_partner[0].name, vat_no)
+
+    _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
+
     def check_vat_es(self, vat):
         return True
