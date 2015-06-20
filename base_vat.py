@@ -45,7 +45,7 @@ class res_partner(osv.osv):
             if not partner.vat:
                 continue
 
-            if self._isEU(patner.vat):
+            if self._isEU(partner.vat):
                 vat_country, vat_number = self._split_vat(partner.vat)
             else:
                 vat_country = 'es'  # HACK: this should be get from company info. Can anyone help?
