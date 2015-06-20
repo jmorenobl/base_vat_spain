@@ -20,14 +20,14 @@
 #
 ##############################################################################
 
-from openerp import models, api, _
+from openerp.osv import osv
 from openerp.exceptions import Warning
 import logging
 _logger = logging.getLogger(__name__)
 
 
-class res_partner(models.Model):
-    _inherit = 'base_vat.base_vat'
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
 
-    def check_vat_es(self):
+    def check_vat_es(self, vat):
         return True
