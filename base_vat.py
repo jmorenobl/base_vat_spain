@@ -22,13 +22,12 @@
 
 from openerp import models, api, _
 from openerp.exceptions import Warning
-from openerp.addons.base_vat.base_vat import _ref_vat
 import logging
 _logger = logging.getLogger(__name__)
 
 
 class res_partner(models.Model):
-    _inherit = 'res.partner'
+    _inherit = 'base_vat.base_vat'
 
     def check_vat_es(self):
         return True
