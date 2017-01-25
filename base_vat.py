@@ -48,7 +48,9 @@ class res_partner(osv.osv):
             if self._isEU(partner.vat):
                 vat_country, vat_number = self._split_vat(partner.vat)
             else:
-                vat_country = 'es'  # HACK: this should be get from company info. Can anyone help?
+                vat_country = False
+                if user_company.country_id and user_company.country_id.code:
+                    vat_country = user_company.country_id.code.lower()
                 vat_number = partner.vat
 
             if not check_func(cr, uid, vat_country, vat_number, context=context):
